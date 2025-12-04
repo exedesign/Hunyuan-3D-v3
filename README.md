@@ -1,5 +1,8 @@
 ﻿# ComfyUI-Hunyuan3D-v3
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub release](https://img.shields.io/github/v/release/exedesign/Hunyuan-3D-v3)](https://github.com/exedesign/Hunyuan-3D-v3/releases)
+
 ComfyUI custom node for **Text-to-3D** and **Image-to-3D** generation using **Tencent Cloud Hunyuan 3D Global API v3**.
 
 ## Features
