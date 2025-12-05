@@ -1,0 +1,37 @@
+[project]
+name = "hunyuan-3d-v3"
+description = "Text-to-3D and Image-to-3D generation using Tencent Cloud Hunyuan 3D Global API. Supports PBR materials, face count control (40K-1.5M faces), and multiple generation types (Normal/LowPoly/Geometry/Sketch). Outputs industry-standard GLB format. Requires Tencent Cloud account with API access."
+version = "1.0.0"
+license = {file = "LICENSE"} 
+# classifiers = [
+#     # For OS-independent nodes (works on all operating systems)
+#     "Operating System :: OS Independent",
+#
+#     # OR for OS-specific nodes, specify the supported systems:
+#     "Operating System :: Microsoft :: Windows",  # Windows specific
+#     "Operating System :: POSIX :: Linux",  # Linux specific
+#     "Operating System :: MacOS",  # macOS specific
+#
+#     # GPU Accelerator support. Pick the ones that are supported by your extension.
+#     "Environment :: GPU :: NVIDIA CUDA",    # NVIDIA CUDA support
+#     "Environment :: GPU :: AMD ROCm",       # AMD ROCm support
+#     "Environment :: GPU :: Intel Arc",      # Intel Arc support
+#     "Environment :: NPU :: Huawei Ascend",  # Huawei Ascend support
+#     "Environment :: GPU :: Apple Metal",    # Apple Metal support
+# ]
+
+dependencies = ["requests>=2.28.0", "aiohttp>=3.8.0", "Pillow>=9.0.0", "numpy>=1.21.0", "nest-asyncio>=1.5.0", "tencentcloud-sdk-python-ai3d>=3.0.1490"]
+
+[project.urls]
+Repository = "https://github.com/exedesign/Hunyuan-3D-v3"
+#  Used by Comfy Registry https://registry.comfy.org
+Documentation = "https://github.com/exedesign/Hunyuan-3D-v3/wiki"
+"Bug Tracker" = "https://github.com/exedesign/Hunyuan-3D-v3/issues"
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "Hunyuan-3D-v3"
+Icon = ""
+includes = [] 
+# "requires-comfyui" = ">=1.0.0"  # ComfyUI version compatibility
+
