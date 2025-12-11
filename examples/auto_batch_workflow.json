@@ -58,7 +58,7 @@
         "Node name for S&R": "HunyuanBatchImageTo3D"
       },
       "widgets_values": [
-        "input",
+        ["input"],
         "*.png",
         "batch_output",
         false,
