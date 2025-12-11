@@ -56,7 +56,24 @@ HunyuanConfig (SecretId, SecretKey)  HunyuanTextTo3D  Preview3D
 
 ## Batch Processing
 
-### Method 1: Python Script (Recommended for Many Images)
+### ⚡ Method 3: Automatic Batch Node (EASIEST!)
+
+**One-click batch processing for entire folders!**
+
+```
+1. Load: examples/auto_batch_workflow.json
+2. Put images in ComfyUI/input/
+3. Set API credentials
+4. Click Queue Prompt once → ALL images processed!
+```
+
+**Features:**
+- ✅ Single click processes all images
+- ✅ Automatic file discovery
+- ✅ Progress tracking
+- ✅ Detailed summary report
+
+### Method 1: Python Script
 
 ```bash
 # 1. Copy batch_hunyuan3d.py to ComfyUI root folder
@@ -66,15 +83,12 @@ HunyuanConfig (SecretId, SecretKey)  HunyuanTextTo3D  Preview3D
 python batch_hunyuan3d.py
 ```
 
-Models will be saved to `output_models/` folder.
-
-### Method 2: ComfyUI Workflow
+### Method 2: Manual Workflow
 
 Use `examples/batch_image_to_3d_workflow.json`:
 1. Load workflow in ComfyUI
-2. Use "Load Images" node (or similar batch loader)
-3. Queue prompt multiple times
-4. Check `models/3d_models/` for outputs
+2. Select image and Queue Prompt
+3. Repeat for each image
 
 ## Troubleshooting
 
