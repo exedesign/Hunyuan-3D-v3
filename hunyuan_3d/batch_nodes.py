@@ -110,17 +110,34 @@ class HunyuanBatchImageTo3DNode:
         """Convert image file to base64"""
         image = Image.open(image_path)
         
-        # Resize if too large
-        max_size = 2048
+        # Convert to RGB if needed (for JPEG)
+        if image.mode in ('RGBA', 'LA', 'P'):
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            if image.mode == 'P':
+                image = image.convert('RGBA')
+            background.paste(image, mask=image.split()[-1] if image.mode in ('RGBA', 'LA') else None)
+            image = background
+        elif image.mode != 'RGB':
+            image = image.convert('RGB')
+        
+        # Resize to reasonable size (API limit considerations)
+        max_size = 1024  # Reduced from 2048 for smaller file size
         if max(image.size) > max_size:
             ratio = max_size / max(image.size)
             new_size = tuple(int(dim * ratio) for dim in image.size)
             image = image.resize(new_size, Image.Resampling.LANCZOS)
         
-        # Convert to base64
+        # Convert to base64 with JPEG compression
         buffer = io.BytesIO()
-        image.save(buffer, format="PNG")
-        return base64.b64encode(buffer.getvalue()).decode('utf-8')
+        image.save(buffer, format="JPEG", quality=85, optimize=True)
+        base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        
+        # Check size and warn
+        size_mb = len(base64_str) / (1024 * 1024)
+        if size_mb > 4:
+            print(f"⚠️  Warning: Base64 size {size_mb:.2f}MB - may exceed API limit")
+        
+        return base64_str
     
     async def _process_single_image(self, client: TencentCloudAPIClient, image_path: Path,
                                     output_folder: str, enable_pbr: bool, face_count: int, 

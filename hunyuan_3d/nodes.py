@@ -294,10 +294,32 @@ class HunyuanImageTo3DNode:
         image_np = (tensor * 255).astype(np.uint8)
         image = Image.fromarray(image_np)
         
-        # Convert to base64
+        # Convert to RGB if needed
+        if image.mode in ('RGBA', 'LA', 'P'):
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            if image.mode == 'P':
+                image = image.convert('RGBA')
+            background.paste(image, mask=image.split()[-1] if image.mode in ('RGBA', 'LA') else None)
+            image = background
+        elif image.mode != 'RGB':
+            image = image.convert('RGB')
+        
+        # Resize to reasonable size
+        max_size = 1024
+        if max(image.size) > max_size:
+            ratio = max_size / max(image.size)
+            new_size = tuple(int(dim * ratio) for dim in image.size)
+            image = image.resize(new_size, Image.Resampling.LANCZOS)
+        
+        # Convert to base64 with JPEG compression
         buffer = io.BytesIO()
-        image.save(buffer, format="PNG")
+        image.save(buffer, format="JPEG", quality=85, optimize=True)
         image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        
+        # Check size
+        size_mb = len(image_base64) / (1024 * 1024)
+        if size_mb > 4:
+            print(f"⚠️  Warning: Base64 size {size_mb:.2f}MB - may exceed API limit")
         
         return image_base64
     
