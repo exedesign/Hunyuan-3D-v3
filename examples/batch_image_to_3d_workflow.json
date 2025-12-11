@@ -1,6 +1,6 @@
 {
-  "last_node_id": 8,
-  "last_link_id": 8,
+  "last_node_id": 10,
+  "last_link_id": 10,
   "nodes": [
     {
       "id": 1,
@@ -29,9 +29,11 @@
         "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
-        "example.png",
+        "example001.png",
         "image"
-      ]
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
     },
     {
       "id": 2,
@@ -142,7 +144,7 @@
         "text": ""
       },
       "widgets_values": [
-        "BATCH IMAGE TO 3D WORKFLOW\n\nHow to use:\n1. Replace LoadImage with 'Load Images' node for batch processing\n2. Set your API credentials in HunyuanConfig\n3. Configure generation parameters (PBR, face count, type)\n4. Queue Prompt multiple times or use batch processing\n5. Models will be saved to: ComfyUI/models/3d_models/\n\nTip: Use 'Queue Prompt' button multiple times with different images for batch processing.\nOr install a custom node like 'ComfyUI-Impact-Pack' for advanced batch control."
+        "╔══════════════════════════════════════════════════════════╗\n║         BATCH IMAGE TO 3D WORKFLOW - METHOD 2           ║\n╚══════════════════════════════════════════════════════════╝\n\n📋 QUICK START:\n1. Set API credentials in HunyuanConfig node\n2. In LoadImage node, select first image (example001.png)\n3. Click 'Queue Prompt' button\n4. Change image to example002.png and Queue again\n5. Repeat for all images\n\n⚡ FAST BATCH METHOD:\n• Name images sequentially: img001.png, img002.png, img003.png\n• Select img001.png\n• Click Queue Prompt\n• Use UP ARROW key to select next image (img002.png)\n• Click Queue Prompt again\n• Repeat\n\n💾 OUTPUT:\n• All models saved to: ComfyUI/models/3d_models/\n• Files named: image_to_3d_TIMESTAMP.glb\n\n⚙️ SETTINGS:\n• Enable PBR: Realistic materials (slower, better quality)\n• Face Count: 500K = balanced, 1.5M = high detail\n• Generate Type: Normal (default), LowPoly (game assets)\n\n💡 TIP: Process 3-5 images, then check results before continuing.\n    Each image takes ~2-5 minutes to process."
       ],
       "color": "#432",
       "bgcolor": "#653"
