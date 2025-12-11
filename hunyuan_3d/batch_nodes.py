@@ -38,9 +38,9 @@ class HunyuanBatchImageTo3DNode:
         return {
             "required": {
                 "config": ("HUNYUAN_CONFIG",),
-                "input_folder": (folders, {"default": "input"}),
-                "file_pattern": ("STRING", {"default": "*.png", "multiline": False}),
+                "input_folder": ("STRING", {"default": "input", "multiline": False}),
                 "output_folder": ("STRING", {"default": "batch_output", "multiline": False}),
+                "file_pattern": ("STRING", {"default": "*.png", "multiline": False}),
                 "enable_pbr": ("BOOLEAN", {"default": False, "label_on": "PBR ON", "label_off": "PBR OFF"}),
                 "face_count": ("INT", {"default": 500000, "min": 40000, "max": 1500000, "step": 10000}),
                 "generate_type": (["Normal", "LowPoly", "Geometry", "Sketch"], {"default": "Normal"}),
@@ -63,12 +63,15 @@ class HunyuanBatchImageTo3DNode:
         """Get list of image files from folder"""
         try:
             import folder_paths
-            input_dir = folder_paths.get_input_directory()
             
-            if input_folder == "input":
-                search_path = input_dir
+            # Check if absolute path
+            if os.path.isabs(input_folder):
+                search_path = input_folder
+            elif input_folder == "input":
+                search_path = folder_paths.get_input_directory()
             else:
-                search_path = os.path.join(input_dir, input_folder)
+                # Relative to ComfyUI input directory
+                search_path = os.path.join(folder_paths.get_input_directory(), input_folder)
             
             # Search for files matching pattern
             pattern_path = os.path.join(search_path, pattern)
@@ -85,10 +88,16 @@ class HunyuanBatchImageTo3DNode:
         """Get full output path for GLB file"""
         try:
             import folder_paths
-            output_dir = folder_paths.get_output_directory()
             
-            # Create subfolder
-            full_output_dir = os.path.join(output_dir, output_folder)
+            # Check if absolute path
+            if os.path.isabs(output_folder):
+                full_output_dir = output_folder
+            else:
+                # Relative to ComfyUI output directory
+                output_dir = folder_paths.get_output_directory()
+                full_output_dir = os.path.join(output_dir, output_folder)
+            
+            # Create folder
             os.makedirs(full_output_dir, exist_ok=True)
             
             return os.path.join(full_output_dir, filename)
@@ -172,7 +181,7 @@ class HunyuanBatchImageTo3DNode:
             return (str(image_path), False, error_msg)
     
     def batch_generate(self, config: Dict[str, str], input_folder: str, 
-                      file_pattern: str, output_folder: str, enable_pbr: bool, 
+                      output_folder: str, file_pattern: str, enable_pbr: bool, 
                       face_count: int, generate_type: str, polygon_type: str, 
                       max_wait_time: int, max_images: int) -> Tuple[str]:
         """Batch process images from folder"""
