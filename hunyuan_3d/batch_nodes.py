@@ -38,55 +38,15 @@ class HunyuanBatchImageTo3DNode:
         return {
             "required": {
                 "config": ("HUNYUAN_CONFIG",),
-                "input_folder": (folders, {
-                    "default": "input",
-                    "tooltip": "Input folder containing images"
-                }),
-                "file_pattern": ("STRING", {
-                    "default": "*.png",
-                    "multiline": False,
-                    "tooltip": "File pattern (*.png, *.jpg, product_*.png)"
-                }),
-                "output_folder": ("STRING", {
-                    "default": "batch_output",
-                    "multiline": False,
-                    "tooltip": "Output subfolder name in ComfyUI/output/"
-                }),
-                "enable_pbr": ("BOOLEAN", {
-                    "default": False,
-                    "label_on": "PBR ON",
-                    "label_off": "PBR OFF",
-                    "tooltip": "Enable PBR materials (slower, better quality)"
-                }),
-                "face_count": ("INT", {
-                    "default": 500000,
-                    "min": 40000,
-                    "max": 1500000,
-                    "step": 10000,
-                    "tooltip": "Number of faces (40K=fast, 1.5M=detailed)"
-                }),
-                "generate_type": (["Normal", "LowPoly", "Geometry", "Sketch"], {
-                    "default": "Normal",
-                    "tooltip": "Generation style"
-                }),
-                "polygon_type": (["triangle", "quadrilateral"], {
-                    "default": "triangle",
-                    "tooltip": "Polygon type"
-                }),
-                "max_wait_time": ("INT", {
-                    "default": 600,
-                    "min": 60,
-                    "max": 3600,
-                    "step": 60,
-                    "tooltip": "Maximum wait time per image (seconds)"
-                }),
-                "max_images": ("INT", {
-                    "default": 10,
-                    "min": 1,
-                    "max": 100,
-                    "step": 1,
-                    "tooltip": "Maximum number of images to process"
-                })
+                "input_folder": (folders, {"default": "input"}),
+                "file_pattern": ("STRING", {"default": "*.png", "multiline": False}),
+                "output_folder": ("STRING", {"default": "batch_output", "multiline": False}),
+                "enable_pbr": ("BOOLEAN", {"default": False, "label_on": "PBR ON", "label_off": "PBR OFF"}),
+                "face_count": ("INT", {"default": 500000, "min": 40000, "max": 1500000, "step": 10000}),
+                "generate_type": (["Normal", "LowPoly", "Geometry", "Sketch"], {"default": "Normal"}),
+                "polygon_type": (["triangle", "quadrilateral"], {"default": "triangle"}),
+                "max_wait_time": ("INT", {"default": 600, "min": 60, "max": 3600, "step": 60}),
+                "max_images": ("INT", {"default": 10, "min": 1, "max": 100, "step": 1})
             }
         }
     
