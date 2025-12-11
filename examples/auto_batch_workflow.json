@@ -60,6 +60,7 @@
       "widgets_values": [
         "input",
         "*.png",
+        "batch_output",
         false,
         500000,
         "Normal",

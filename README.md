@@ -64,14 +64,16 @@ HunyuanConfig (SecretId, SecretKey)  HunyuanTextTo3D  Preview3D
 1. Load: examples/auto_batch_workflow.json
 2. Put images in ComfyUI/input/
 3. Set API credentials
-4. Click Queue Prompt once → ALL images processed!
+4. Configure input/output folders
+5. Click Queue Prompt once → ALL images processed!
 ```
 
 **Features:**
 - ✅ Single click processes all images
-- ✅ Automatic file discovery
-- ✅ Progress tracking
-- ✅ Detailed summary report
+- ✅ Automatic file discovery with pattern matching
+- ✅ Custom output folder selection
+- ✅ Progress tracking per image
+- ✅ Detailed summary report with paths
 
 ### Method 1: Python Script
 

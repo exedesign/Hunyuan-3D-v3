@@ -38,39 +38,54 @@ class HunyuanBatchImageTo3DNode:
         return {
             "required": {
                 "config": ("HUNYUAN_CONFIG",),
-                "folder_path": (folders, {
-                    "default": "input"
+                "input_folder": (folders, {
+                    "default": "input",
+                    "tooltip": "Input folder containing images"
                 }),
                 "file_pattern": ("STRING", {
                     "default": "*.png",
-                    "multiline": False
+                    "multiline": False,
+                    "tooltip": "File pattern (*.png, *.jpg, product_*.png)"
+                }),
+                "output_folder": ("STRING", {
+                    "default": "batch_output",
+                    "multiline": False,
+                    "tooltip": "Output subfolder name in ComfyUI/output/"
                 }),
                 "enable_pbr": ("BOOLEAN", {
-                    "default": False
+                    "default": False,
+                    "label_on": "PBR ON",
+                    "label_off": "PBR OFF",
+                    "tooltip": "Enable PBR materials (slower, better quality)"
                 }),
                 "face_count": ("INT", {
                     "default": 500000,
                     "min": 40000,
                     "max": 1500000,
-                    "step": 10000
+                    "step": 10000,
+                    "tooltip": "Number of faces (40K=fast, 1.5M=detailed)"
                 }),
                 "generate_type": (["Normal", "LowPoly", "Geometry", "Sketch"], {
-                    "default": "Normal"
+                    "default": "Normal",
+                    "tooltip": "Generation style"
                 }),
                 "polygon_type": (["triangle", "quadrilateral"], {
-                    "default": "triangle"
+                    "default": "triangle",
+                    "tooltip": "Polygon type"
                 }),
                 "max_wait_time": ("INT", {
                     "default": 600,
                     "min": 60,
                     "max": 3600,
-                    "step": 60
+                    "step": 60,
+                    "tooltip": "Maximum wait time per image (seconds)"
                 }),
                 "max_images": ("INT", {
                     "default": 10,
                     "min": 1,
                     "max": 100,
-                    "step": 1
+                    "step": 1,
+                    "tooltip": "Maximum number of images to process"
                 })
             }
         }
@@ -84,16 +99,16 @@ class HunyuanBatchImageTo3DNode:
     def __init__(self):
         self.file_manager = FileManager()
     
-    def _get_image_files(self, folder_path: str, pattern: str, max_images: int) -> List[Path]:
+    def _get_image_files(self, input_folder: str, pattern: str, max_images: int) -> List[Path]:
         """Get list of image files from folder"""
         try:
             import folder_paths
             input_dir = folder_paths.get_input_directory()
             
-            if folder_path == "input":
+            if input_folder == "input":
                 search_path = input_dir
             else:
-                search_path = os.path.join(input_dir, folder_path)
+                search_path = os.path.join(input_dir, input_folder)
             
             # Search for files matching pattern
             pattern_path = os.path.join(search_path, pattern)
@@ -103,8 +118,24 @@ class HunyuanBatchImageTo3DNode:
             files = sorted(files)[:max_images]
             return [Path(f) for f in files]
         except Exception as e:
-            print(f"Error getting image files: {e}")
+            print(f"❌ Error getting image files: {e}")
             return []
+    
+    def _get_output_path(self, output_folder: str, filename: str) -> str:
+        """Get full output path for GLB file"""
+        try:
+            import folder_paths
+            output_dir = folder_paths.get_output_directory()
+            
+            # Create subfolder
+            full_output_dir = os.path.join(output_dir, output_folder)
+            os.makedirs(full_output_dir, exist_ok=True)
+            
+            return os.path.join(full_output_dir, filename)
+        except Exception as e:
+            print(f"❌ Error creating output path: {e}")
+            # Fallback to models/3d_models
+            return self.file_manager.get_output_path(filename)
     
     def _image_to_base64(self, image_path: Path) -> str:
         """Convert image file to base64"""
@@ -123,8 +154,8 @@ class HunyuanBatchImageTo3DNode:
         return base64.b64encode(buffer.getvalue()).decode('utf-8')
     
     async def _process_single_image(self, client: TencentCloudAPIClient, image_path: Path,
-                                    enable_pbr: bool, face_count: int, generate_type: str,
-                                    polygon_type: str, max_wait_time: int) -> Tuple[str, bool, str]:
+                                    output_folder: str, enable_pbr: bool, face_count: int, 
+                                    generate_type: str, polygon_type: str, max_wait_time: int) -> Tuple[str, bool, str]:
         """Process single image and return (path, success, message)"""
         try:
             print(f"\n{'='*60}")
@@ -165,9 +196,9 @@ class HunyuanBatchImageTo3DNode:
             if not glb_url:
                 return (str(image_path), False, "No GLB file in results")
             
-            # Download
+            # Download to custom output folder
             output_filename = f"{image_path.stem}_3d.glb"
-            output_path = self.file_manager.get_output_path(output_filename)
+            output_path = self._get_output_path(output_folder, output_filename)
             
             print(f"⬇️  Downloading...")
             await client.download_model(glb_url, output_path)
@@ -180,9 +211,10 @@ class HunyuanBatchImageTo3DNode:
             print(f"❌ Error: {error_msg}")
             return (str(image_path), False, error_msg)
     
-    def batch_generate(self, config: Dict[str, str], folder_path: str, file_pattern: str,
-                      enable_pbr: bool, face_count: int, generate_type: str, 
-                      polygon_type: str, max_wait_time: int, max_images: int) -> Tuple[str]:
+    def batch_generate(self, config: Dict[str, str], input_folder: str, file_pattern: str,
+                      output_folder: str, enable_pbr: bool, face_count: int, 
+                      generate_type: str, polygon_type: str, max_wait_time: int, 
+                      max_images: int) -> Tuple[str]:
         """Batch process images from folder"""
         
         print("\n" + "="*60)
@@ -190,14 +222,15 @@ class HunyuanBatchImageTo3DNode:
         print("="*60)
         
         # Get image files
-        image_files = self._get_image_files(folder_path, file_pattern, max_images)
+        image_files = self._get_image_files(input_folder, file_pattern, max_images)
         
         if not image_files:
-            error_msg = f"❌ No images found in '{folder_path}' matching '{file_pattern}'"
+            error_msg = f"❌ No images found in '{input_folder}' matching '{file_pattern}'"
             print(error_msg)
             return (error_msg,)
         
         print(f"📁 Found {len(image_files)} images")
+        print(f"📂 Output folder: {output_folder}")
         print(f"⚙️  Settings: {generate_type}, {face_count} faces, PBR: {enable_pbr}")
         print()
         
@@ -224,7 +257,7 @@ class HunyuanBatchImageTo3DNode:
                 
                 result = loop.run_until_complete(
                     self._process_single_image(
-                        client, image_path, enable_pbr, face_count,
+                        client, image_path, output_folder, enable_pbr, face_count,
                         generate_type, polygon_type, max_wait_time
                     )
                 )
@@ -244,7 +277,7 @@ class HunyuanBatchImageTo3DNode:
                 
                 result = loop.run_until_complete(
                     self._process_single_image(
-                        client, image_path, enable_pbr, face_count,
+                        client, image_path, output_folder, enable_pbr, face_count,
                         generate_type, polygon_type, max_wait_time
                     )
                 )
@@ -258,6 +291,10 @@ class HunyuanBatchImageTo3DNode:
             loop.close()
         
         # Generate summary
+        import folder_paths
+        output_dir = folder_paths.get_output_directory()
+        full_output_path = os.path.join(output_dir, output_folder)
+        
         summary = f"""
 ╔══════════════════════════════════════════════════════════╗
 ║           BATCH PROCESSING COMPLETE                      ║
@@ -266,6 +303,7 @@ class HunyuanBatchImageTo3DNode:
 ✅ Successful: {successful}
 ❌ Failed: {failed}
 📊 Total: {len(image_files)}
+📂 Output: {full_output_path}
 
 RESULTS:
 """
