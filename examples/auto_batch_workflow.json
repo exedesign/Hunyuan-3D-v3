@@ -65,6 +65,7 @@
         "Node name for S&R": "HunyuanBatchImageTo3D"
       },
       "widgets_values": [
+        "input",
         "*.png",
         "batch_output",
         false,
@@ -72,8 +73,7 @@
         "Normal",
         "triangle",
         600,
-        10,
-        "input"
+        10
       ],
       "color": "#232",
       "bgcolor": "#353"

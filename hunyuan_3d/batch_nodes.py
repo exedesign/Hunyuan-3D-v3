@@ -38,6 +38,7 @@ class HunyuanBatchImageTo3DNode:
         return {
             "required": {
                 "config": ("HUNYUAN_CONFIG",),
+                "input_folder": (folders, {"default": "input"}),
                 "file_pattern": ("STRING", {"default": "*.png", "multiline": False}),
                 "output_folder": ("STRING", {"default": "batch_output", "multiline": False}),
                 "enable_pbr": ("BOOLEAN", {"default": False, "label_on": "PBR ON", "label_off": "PBR OFF"}),
@@ -46,9 +47,6 @@ class HunyuanBatchImageTo3DNode:
                 "polygon_type": (["triangle", "quadrilateral"], {"default": "triangle"}),
                 "max_wait_time": ("INT", {"default": 600, "min": 60, "max": 3600, "step": 60}),
                 "max_images": ("INT", {"default": 10, "min": 1, "max": 100, "step": 1})
-            },
-            "optional": {
-                "input_folder": ("STRING", {"default": "input", "multiline": False}),
             }
         }
     
@@ -173,10 +171,10 @@ class HunyuanBatchImageTo3DNode:
             print(f"❌ Error: {error_msg}")
             return (str(image_path), False, error_msg)
     
-    def batch_generate(self, config: Dict[str, str], file_pattern: str,
-                      output_folder: str, enable_pbr: bool, face_count: int, 
-                      generate_type: str, polygon_type: str, max_wait_time: int, 
-                      max_images: int, input_folder: str = "input") -> Tuple[str]:
+    def batch_generate(self, config: Dict[str, str], input_folder: str, 
+                      file_pattern: str, output_folder: str, enable_pbr: bool, 
+                      face_count: int, generate_type: str, polygon_type: str, 
+                      max_wait_time: int, max_images: int) -> Tuple[str]:
         """Batch process images from folder"""
         
         print("\n" + "="*60)
