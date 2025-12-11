@@ -52,8 +52,8 @@ class HunyuanBatchImageTo3DNode:
             }
         }
     
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("batch_summary",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("batch_summary", "model_paths")
     FUNCTION = "batch_generate"
     OUTPUT_NODE = True
     CATEGORY = "Hunyuan3D/v3"
@@ -270,11 +270,18 @@ class HunyuanBatchImageTo3DNode:
 RESULTS:
 """
         
+        # Collect successful model paths
+        model_paths = []
         for path, success, message in results:
             status = "✅" if success else "❌"
             filename = Path(path).name
             summary += f"\n{status} {filename}: {message}"
+            if success:
+                model_paths.append(path)
         
         print("\n" + summary)
         
-        return {"ui": {"text": [summary]}, "result": (summary,)}
+        # Return paths as newline-separated string for compatibility
+        paths_string = "\n".join(model_paths) if model_paths else ""
+        
+        return {"ui": {"text": [summary]}, "result": (summary, paths_string)}
