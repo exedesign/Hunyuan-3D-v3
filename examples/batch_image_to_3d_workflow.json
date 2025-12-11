@@ -1,6 +1,6 @@
 {
-  "last_node_id": 10,
-  "last_link_id": 10,
+  "last_node_id": 11,
+  "last_link_id": 11,
   "nodes": [
     {
       "id": 1,
@@ -85,7 +85,7 @@
         {
           "name": "model_path",
           "type": "STRING",
-          "links": [3],
+          "links": [3, 10],
           "shape": 3,
           "slot_index": 0
         }
@@ -133,12 +133,33 @@
       ]
     },
     {
+      "id": 10,
+      "type": "Preview3D",
+      "pos": [810, 250],
+      "size": [400, 400],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mesh",
+          "type": "STRING",
+          "link": 10
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Preview3D"
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
       "id": 5,
       "type": "Note",
       "pos": [50, 580],
       "size": [700, 180],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "properties": {
         "text": ""
@@ -153,7 +174,8 @@
   "links": [
     [1, 1, 0, 3, 1, "IMAGE"],
     [2, 2, 0, 3, 0, "HUNYUAN_CONFIG"],
-    [3, 3, 0, 4, 0, "STRING"]
+    [3, 3, 0, 4, 0, "STRING"],
+    [10, 3, 0, 10, 0, "STRING"]
   ],
   "groups": [],
   "config": {},

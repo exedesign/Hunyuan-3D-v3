@@ -1,6 +1,6 @@
 {
-  "last_node_id": 4,
-  "last_link_id": 3,
+  "last_node_id": 5,
+  "last_link_id": 4,
   "nodes": [
     {
       "id": 1,
@@ -81,7 +81,7 @@
         {
           "name": "3d_model_path",
           "type": "STRING",
-          "links": [3],
+          "links": [3, 4],
           "shape": 3
         }
       ],
@@ -106,21 +106,44 @@
       "mode": 0,
       "inputs": [
         {
-          "name": "model_file",
+          "name": "mesh",
           "type": "STRING",
           "link": 3
         }
       ],
       "properties": {
         "Node name for S&R": "Preview3D"
+      }
+    },
+    {
+      "id": 5,
+      "type": "ShowText|pysssss",
+      "pos": [600, 450],
+      "size": [400, 150],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ShowText|pysssss"
       },
-      "widgets_values": []
+      "widgets_values": [
+        "",
+        "Model Path"
+      ]
     }
   ],
   "links": [
     [1, 1, 0, 3, 0, "HUNYUAN_CONFIG"],
     [2, 2, 0, 3, 1, "IMAGE"],
-    [3, 3, 0, 4, 0, "STRING"]
+    [3, 3, 0, 4, 0, "STRING"],
+    [4, 3, 0, 5, 0, "STRING"]
   ],
   "groups": [
     {

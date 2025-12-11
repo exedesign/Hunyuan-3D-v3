@@ -1,6 +1,6 @@
 {
-  "last_node_id": 3,
-  "last_link_id": 2,
+  "last_node_id": 5,
+  "last_link_id": 4,
   "nodes": [
     {
       "id": 1,
@@ -52,13 +52,19 @@
           "links": [2],
           "shape": 3,
           "slot_index": 0
+        },
+        {
+          "name": "model_paths",
+          "type": "STRING",
+          "links": [3],
+          "shape": 3,
+          "slot_index": 1
         }
       ],
       "properties": {
         "Node name for S&R": "HunyuanBatchImageTo3D"
       },
       "widgets_values": [
-        ["input"],
         "*.png",
         "batch_output",
         false,
@@ -66,7 +72,8 @@
         "Normal",
         "triangle",
         600,
-        10
+        10,
+        "input"
       ],
       "color": "#232",
       "bgcolor": "#353"
@@ -104,11 +111,66 @@
     },
     {
       "id": 4,
-      "type": "Note",
-      "pos": [50, 220],
-      "size": [800, 340],
+      "type": "HunyuanBatchPreview",
+      "pos": [900, 380],
+      "size": [400, 300],
       "flags": {},
       "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_paths",
+          "type": "STRING",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model_path",
+          "type": "STRING",
+          "links": [4],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HunyuanBatchPreview"
+      },
+      "widgets_values": [
+        "",
+        0
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 5,
+      "type": "Preview3D",
+      "pos": [1350, 380],
+      "size": [400, 400],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mesh",
+          "type": "STRING",
+          "link": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Preview3D"
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 6,
+      "type": "Note",
+      "pos": [50, 470],
+      "size": [800, 340],
+      "flags": {},
+      "order": 5,
       "mode": 0,
       "properties": {
         "text": ""
@@ -122,7 +184,9 @@
   ],
   "links": [
     [1, 1, 0, 2, 0, "HUNYUAN_CONFIG"],
-    [2, 2, 0, 3, 0, "STRING"]
+    [2, 2, 0, 3, 0, "STRING"],
+    [3, 2, 1, 4, 0, "STRING"],
+    [4, 4, 0, 5, 0, "STRING"]
   ],
   "groups": [],
   "config": {},
